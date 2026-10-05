@@ -25,8 +25,8 @@ const MP_VERSAO = "0.10.35";
 const WASM = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSAO}/wasm`;
 const MODELO =
   "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
-const CONTAGEM_REGRESSIVA_MS = 3000;     // igual ao --countdown do collect_dataset.py
-const META = Math.max(1, Number(CONFIG.amostrasPorLetra) || 15);
+const CONTAGEM_MS = Math.max(0, Number(CONFIG.contagemSegundos) || 0) * 1000;
+const META = Math.max(1, Number(CONFIG.amostrasPorLetra) || 10);
 
 const TELAS = ["tela-status", "tela-termo", "tela-sessao", "tela-gravar"];
 const CONDICOES_TEXTO = {
@@ -394,14 +394,15 @@ function desenharMaos(resultado, largura) {
 function iniciarGravacao() {
   if (estado.gravacao || !estado.landmarker) return;
   estado.gravacao = {
-    fase: "contagem",
-    ate: performance.now() + CONTAGEM_REGRESSIVA_MS,
+    fase: CONTAGEM_MS > 0 ? "contagem" : "gravando",
+    ate: performance.now() + CONTAGEM_MS,
     classe: estado.classes[estado.indice],
     quadros: [],
     inicio: 0,
   };
   retorno("", true);
   atualizarBotoes();
+  $("selo-rec").hidden = CONTAGEM_MS > 0;
 }
 
 function processarGravacao(quadroAtual, ts) {
@@ -414,11 +415,11 @@ function processarGravacao(quadroAtual, ts) {
       return;
     }
     g.fase = "gravando";
-    g.inicio = ts;
     $("contagem").textContent = "";
     $("selo-rec").hidden = false;
   }
   if (g.fase === "gravando") {
+    if (!g.quadros.length) g.inicio = ts;
     g.quadros.push(quadroAtual);
     if (g.quadros.length >= QUADROS_POR_AMOSTRA) {
       g.fase = "enviando";
@@ -555,7 +556,7 @@ function mostrarLetra() {
   $("letra-barra").style.width = `${Math.min(100, (n / META) * 100)}%`;
   $("letra-instrucao").textContent = controle
     ? "Mão parada fora de posição, mão saindo da imagem, sem mão nenhuma, coçando o rosto: qualquer coisa que NÃO seja uma letra. Isso ensina o sistema a não inventar letra."
-    : `Faça a letra ${classe.significado} do alfabeto manual da Libras, com a mão que você usa para escrever.`;
+    : `Forme a letra ${classe.significado} do alfabeto manual da Libras com a mão que você usa para escrever e, já com a mão parada, aperte espaço com a outra mão.`;
 }
 
 function montarGrade() {
