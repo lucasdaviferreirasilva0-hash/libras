@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Coleta Libras Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: uma coluna para ler (termo, sessao); duas colunas para gravar
+   (camera grande | letra atual + progresso). Cores da personagem do avatar. */
+:root {
+  --bg: #f6f2fb;
+  --surface: #ffffff;
+  --ink: #221238;
+  --muted: #66577f;
+  --line: #e3d9ef;
+  --primary: #4b2a7b;
+  --primary-ink: #ffffff;
+  --accent: #1fa89b;
+  --accent-soft: #d6f3ef;
+  --danger: #c2413a;
+  --danger-soft: #fbe3e1;
+  --stage: #140b22;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --radius: 14px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #150c22; --surface: #1f1433; --ink: #f2ecfa; --muted: #b3a5c9;
+    --line: #3a2b55; --primary: #b99cf2; --primary-ink: #1b1030;
+    --accent: #3fd6c7; --accent-soft: #123b39; --danger: #ff8a80; --danger-soft: #3d1a1f;
+    --stage: #0b0614; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+/* Sem isto, o display:grid das caixas vence o atributo hidden e todas as
+   telas aparecem juntas. */
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink); font: 17px/1.55 var(--font-body);
+  padding-inline: 16px; padding-block: max(20px, env(safe-area-inset-top)) 40px;
+}
+.wrap { max-width: 1120px; margin-inline: auto; display: grid; gap: 24px; }
+.estreito { max-width: 680px; }
+header.topo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.marca { font: 800 1.05rem/1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; color: var(--primary); }
+.marca span { color: var(--accent); }
+.quem { color: var(--muted); font-size: .95rem; }
+.quem strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+h1, h2 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; }
+h2 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; }
+.cartao { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.termo { display: grid; gap: 12px; border-left: 4px solid var(--accent); padding: 4px 0 4px 18px; }
+.termo strong { color: var(--ink); }
+.rotulo { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.check input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--primary); flex: none; }
+button {
+  font: 700 1rem/1 var(--font-body); border-radius: 999px; border: 2px solid transparent;
+  padding: 14px 22px; cursor: pointer; background: var(--primary); color: var(--primary-ink);
+}
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.secundario { background: transparent; color: var(--ink); border-color: var(--line); }
+button.perigo { background: transparent; color: var(--danger); border-color: var(--danger); }
+button.perigo-cheio { background: var(--danger); color: #fff; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.botoes { display: flex; flex-wrap: wrap; gap: 10px; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+legend { font-weight: 700; margin-bottom: 4px; }
+.opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.opcoes label { border: 2px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.opcoes input { position: absolute; opacity: 0; pointer-events: none; }
+.opcoes label:has(input:checked) { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, transparent); font-weight: 700; }
+.opcoes label:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+.lista-sessoes { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-variant-numeric: tabular-nums; }
+.lista-sessoes li { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--muted); }
+.lista-sessoes b { color: var(--ink); }
+.aviso { border-radius: 10px; padding: 12px 14px; background: var(--accent-soft); }
+.aviso.erro { background: var(--danger-soft); color: var(--danger); font-weight: 700; }
+
+/* --- tela de gravacao --- */
+.gravar { display: grid; gap: 20px; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 860px) { .gravar { grid-template-columns: minmax(0, 1fr); } }
+.palco { position: relative; background: var(--stage); border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; }
+.palco canvas { width: 100%; height: 100%; display: block; object-fit: contain; }
+.sobre { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.contagem { font: 800 clamp(5rem, 16vw, 9rem)/1 var(--font-display); color: #fff; text-shadow: 0 4px 24px rgba(0,0,0,.5); }
+.selo { position: absolute; top: 12px; left: 12px; background: rgba(20,11,34,.78); color: #fff; border-radius: 999px; padding: 6px 12px; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.selo.rec { left: auto; right: 12px; background: var(--danger); font-weight: 700; }
+.letra-atual { display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; align-items: center; }
+.letra-grande { grid-row: span 3; font: 800 clamp(5rem, 12vw, 7.5rem)/0.9 var(--font-display); color: var(--primary); min-width: 1.1em; text-align: center; }
+.letra-grande.texto { font-size: 2rem; line-height: 1.1; }
+.meta { font-variant-numeric: tabular-nums; color: var(--muted); }
+.barra { height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.barra i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+@media (prefers-reduced-motion: reduce) { .barra i { transition: none; } }
+.retorno { min-height: 1.6em; font-weight: 700; }
+.retorno.bom { color: var(--accent); }
+.retorno.ruim { color: var(--danger); }
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
+.grade button {
+  padding: 8px 4px 6px; border-radius: 10px; background: var(--surface); color: var(--ink);
+  border: 2px solid var(--line); display: grid; gap: 2px; font-size: 1.05rem;
+}
+.grade button small { font: 400 .72rem/1 var(--font-body); color: var(--muted); font-variant-numeric: tabular-nums; }
+.grade button.atual { border-color: var(--primary); }
+.grade button.completa { background: var(--accent-soft); border-color: var(--accent); }
+.dicas { margin: 0; padding-left: 1.2em; color: var(--muted); display: grid; gap: 4px; }
+kbd { font: 700 .8em/1 var(--font-body); border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; padding: 2px 6px; background: var(--surface); color: var(--ink); }
+button kbd { background: transparent; color: inherit; border-color: currentColor; opacity: .75; margin-left: 6px; }
+.rodape { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; }
+.confirmar { display: grid; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header class="topo">
+    <div class="marca">Libras Bridge <span>· Ciências Delas</span></div>
+    <div class="quem" id="quem" hidden>Participante <strong id="codigo-participante"></strong></div>
+  </header>
+
+  <!-- carregando / erro -->
+  <section class="cartao estreito" id="tela-status">
+    <h1 id="status-titulo">Abrindo seu convite…</h1>
+    <p id="status-texto">Só um instante.</p>
+  </section>
+
+  <!-- termo de participacao -->
+  <section class="cartao estreito" id="tela-termo" hidden>
+    <p class="rotulo">Antes de começar</p>
+    <h1>Termo de participação</h1>
+    <div class="termo">
+      <p>Este é um projeto escolar de ciência e tecnologia sobre a Língua Brasileira de Sinais. Vamos gravar os <strong>pontos das articulações da sua mão</strong> enquanto você faz as letras do alfabeto manual da Libras.</p>
+      <p><strong>Não gravamos vídeo, foto nem o seu rosto.</strong> A imagem da câmera é analisada no seu próprio aparelho e só saem dele as coordenadas numéricas de 21 pontos da mão.</p>
+      <p>Você é identificado só pelo código <strong id="termo-codigo"></strong>. Seu nome não fica em lugar nenhum do sistema.</p>
+      <p>Os dados ficam guardados num banco de dados na internet (serviço Supabase), acessível só ao responsável pelo projeto. Serão usados só para treinar e avaliar este protótipo, e não serão publicados.</p>
+      <p>Você pode parar quando quiser e apagar todos os seus dados a qualquer momento, por esta mesma página, sem precisar justificar.</p>
+    </div>
+    <label class="check"><input type="checkbox" id="aceite-termo"> <span>Li e concordo em participar.</span></label>
+    <label class="check"><input type="checkbox" id="aceite-idade"> <span>Tenho 18 anos ou mais, <strong>ou</strong> meu responsável leu este termo e autorizou.</span></label>
+    <div class="botoes"><button id="btn-aceitar" disabled>Concordo, quero participar</button></div>
+    <p class="aviso erro" id="termo-erro" hidden></p>
+  </section>
+
+  <!-- escolha da sessao -->
+  <section class="cartao estreito" id="tela-sessao" hidden>
+    <p class="rotulo">Sessão de gravação</p>
+    <h1>Como está o lugar onde você está agora?</h1>
+    <p class="quem">Cada sessão registra as condições da gravação. Se puder, faça uma segunda sessão <strong>em outro dia</strong>, com outra luz ou outro fundo: é isso que ensina o sistema a funcionar na feira.</p>
+    <div id="sessoes-anteriores" hidden>
+      <p class="rotulo">Suas sessões</p>
+      <ul class="lista-sessoes" id="lista-sessoes"></ul>
+    </div>
+    <form id="form-sessao" class="cartao" style="padding:0;border:0">
+      <fieldset>
+        <legend>Iluminação</legend>
+        <div class="opcoes">
+          <label><input type="radio" name="iluminacao" value="natural" id="il-natural" checked>Luz do dia</label>
+          <label><input type="radio" name="iluminacao" value="artificial" id="il-artificial">Lâmpada</label>
+          <label><input type="radio" name="iluminacao" value="fraca" id="il-fraca">Pouca luz</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Fundo atrás de você</legend>
+        <div class="opcoes">
+          <label><input type="radio" name="fundo" value="liso" id="fu-liso" checked>Parede lisa</label>
+          <label><input type="radio" name="fundo" value="baguncado" id="fu-baguncado">Com coisas</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Distância da câmera</legend>
+        <div class="opcoes">
+          <label><input type="radio" name="distancia" value="perto" id="di-perto">Perto (~40 cm)</label>
+          <label><input type="radio" name="distancia" value="medio" id="di-medio" checked>Médio (~60 cm)</label>
+          <label><input type="radio" name="distancia" value="longe" id="di-longe">Longe (~1 m)</label>
+        </div>
+      </fieldset>
+      <div class="botoes">
+        <button type="submit" id="btn-nova-sessao">Começar nova sessão</button>
+        <button type="button" class="secundario" id="btn-continuar" hidden>Continuar a última sessão</button>
+      </div>
+    </form>
+    <p class="aviso erro" id="sessao-erro" hidden></p>
+  </section>
+
+  <!-- gravacao -->
+  <section id="tela-gravar" hidden>
+    <div class="gravar">
+      <div class="palco" id="palco">
+        <canvas id="camera" width="640" height="480" aria-label="Imagem da câmera com os pontos da mão"></canvas>
+        <div class="selo" id="selo-info">abrindo a câmera…</div>
+        <div class="selo rec" id="selo-rec" hidden>● gravando</div>
+        <div class="sobre"><div class="contagem" id="contagem" aria-live="assertive"></div></div>
+      </div>
+
+      <div class="cartao">
+        <div class="letra-atual">
+          <div class="letra-grande" id="letra-grande">A</div>
+          <p class="rotulo" id="letra-rotulo">Faça a letra</p>
+          <p class="meta" id="letra-meta">0 de 15 nesta sessão</p>
+          <div class="barra" aria-hidden="true"><i id="letra-barra"></i></div>
+        </div>
+        <p id="letra-instrucao" class="quem"></p>
+        <div class="botoes">
+          <button id="btn-gravar">Gravar <kbd>espaço</kbd></button>
+          <button class="secundario" id="btn-desfazer" disabled>Apagar a última</button>
+        </div>
+        <div class="botoes">
+          <button class="secundario" id="btn-anterior">← Anterior</button>
+          <button class="secundario" id="btn-proxima">Próxima →</button>
+        </div>
+        <p class="retorno" id="retorno" aria-live="polite"></p>
+        <div>
+          <p class="rotulo" style="margin-bottom:8px">Todas as letras · sessão <span id="sessao-codigo"></span></p>
+          <div class="grade" id="grade"></div>
+        </div>
+        <ul class="dicas">
+          <li>Entre uma gravação e outra, <strong>abaixe a mão e levante de novo</strong>.</li>
+          <li>Varie um pouco: mão mais alta, mais baixa, ângulo levemente diferente.</li>
+          <li>Mantenha a mão inteira dentro da imagem.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- rodape: sair do estudo -->
+  <footer class="cartao" id="tela-sair" hidden>
+    <div class="rodape">
+      <button class="secundario" id="btn-encerrar" hidden>Encerrar esta sessão</button>
+      <button class="perigo" id="btn-apagar-tudo">Sair do estudo e apagar meus dados</button>
+    </div>
+    <div class="confirmar" id="confirmar-apagar" hidden>
+      <p><strong>Tem certeza?</strong> Isso apaga todas as suas <span id="total-gravacoes">0</span> gravações e o seu aceite do termo. Não dá para desfazer.</p>
+      <div class="botoes">
+        <button class="perigo-cheio" id="btn-apagar-sim">Sim, apagar tudo</button>
+        <button class="secundario" id="btn-apagar-nao">Cancelar</button>
+      </div>
+    </div>
+  </footer>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

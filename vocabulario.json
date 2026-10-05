@@ -1,0 +1,159 @@
+{
+  "aviso": "Os significados so podem ser preenchidos apos validacao por pessoa fluente em Libras. Datilologia (alfabeto manual) NAO e traducao de Libras: serve para nomes proprios e palavras sem sinal correspondente.",
+  "classes": [
+    {
+      "codigo": "LETRA_A",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "A",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_B",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "B",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_C",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "C",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_D",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "D",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_E",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "E",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_F",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "F",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_G",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "G",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_I",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "I",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_L",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "L",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_M",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "M",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_N",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "N",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_O",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "O",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_P",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "P",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_Q",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "Q",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_R",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "R",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_S",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "S",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_T",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "T",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_U",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "U",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_V",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "V",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_W",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "W",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "LETRA_Y",
+      "tipo": "datilologia",
+      "status": "padronizado",
+      "significado": "Y",
+      "observacoes": "alfabeto manual da Libras, configuracao estatica"
+    },
+    {
+      "codigo": "SEM_SINAL",
+      "tipo": "controle",
+      "status": "padronizado",
+      "significado": "(nenhum sinal)",
+      "observacoes": "classe negativa: mao parada, fora de posicao ou ausente. Sem ela o modelo classifica qualquer movimento como algum sinal."
+    }
+  ]
+}
