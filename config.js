@@ -13,7 +13,12 @@ export const CONFIG = {
   supabaseUrl: "https://sssrgtkdkslroobzwixl.supabase.co",        // ex.: "https://abcdefghijkl.supabase.co"
   chavePublica: "sb_publishable_UfRT6BB-yDMEBkhmaDoaNQ_jq7UuPKA",       // ex.: "sb_publishable_xxxxxxxx"
 
-  // Meta de gravacoes por letra em CADA sessao. O protocolo pede 30 por
-  // pessoa, em pelo menos 2 sessoes de dias diferentes: 2 x 15 = 30.
-  amostrasPorLetra: 15,
+  // Meta de gravacoes por letra em CADA sessao. Gravacoes da mesma pessoa
+  // no mesmo dia saem quase iguais: mais pessoas vale mais que mais repeticoes.
+  amostrasPorLetra: 10,
+
+  // Espera entre apertar "Gravar" e comecar a gravar. 0 = grava na hora
+  // (forme a letra ANTES e aperte espaco com a outra mao). Use 2 ou 3 se a
+  // pessoa precisar da mesma mao para tocar no botao (celular).
+  contagemSegundos: 0,
 };
